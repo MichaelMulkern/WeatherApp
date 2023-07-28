@@ -6,18 +6,18 @@ public class Forcast {
     private String temperatureUnit;
     private String windSpeed;
     private String windDirection;
-    private int fcNumber;
-    private int temperature;
+    private Integer fcNumber;
+    private Integer temperature;
     private Integer probabilityOfPrecipitation;
-    private int reletiveHumidity;
-    private int dewPoint; //In degrees C, maybe do a conversion or something and instantiate it as int
+    private Integer reletiveHumidity;
+    private Integer dewPoint; //In degrees C, maybe do a conversion or something and instantiate it as int
     private String shortForcast;
     private String longForcast;
 
     //Constructors
 
 
-    public Forcast(String name, String temperatureUnit, String windSpeed, String windDirection, int fcNumber, int temperature, Integer probabilityOfPrecipitation, int reletiveHumidity, int dewPoint, String shortForcast, String longForcast) {
+    public Forcast(String name, String temperatureUnit, String windSpeed, String windDirection, Integer fcNumber, Integer temperature, Integer probabilityOfPrecipitation, Integer reletiveHumidity, Integer dewPoint, String shortForcast, String longForcast) {
         this.name = name;
         this.temperatureUnit = temperatureUnit;
         this.windSpeed = windSpeed;
@@ -68,19 +68,19 @@ public class Forcast {
         this.windDirection = windDirection;
     }
 
-    public int getFcNumber() {
+    public Integer getFcNumber() {
         return fcNumber;
     }
 
-    public void setFcNumber(int fcNumber) {
+    public void setFcNumber(Integer fcNumber) {
         this.fcNumber = fcNumber;
     }
 
-    public int getTemperature() {
+    public Integer getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(int temperature) {
+    public void setTemperature(Integer temperature) {
         this.temperature = temperature;
     }
 
@@ -92,19 +92,19 @@ public class Forcast {
         this.probabilityOfPrecipitation = probabilityOfPrecipitation;
     }
 
-    public int getReletiveHumidity() {
+    public Integer getReletiveHumidity() {
         return reletiveHumidity;
     }
 
-    public void setReletiveHumidity(int reletiveHumidity) {
+    public void setReletiveHumidity(Integer reletiveHumidity) {
         this.reletiveHumidity = reletiveHumidity;
     }
 
-    public int getDewPoint() {
+    public Integer getDewPoint() {
         return dewPoint;
     }
 
-    public void setDewPoint(int dewPoint) {
+    public void setDewPoint(Integer dewPoint) {
         this.dewPoint = dewPoint;
     }
 

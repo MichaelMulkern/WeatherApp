@@ -17,8 +17,10 @@ public class ForcastController {
     @Autowired
     NoaaService service;
 
-    public Forcast createForcast(){
-        Forcast forcastObject = new Forcast();
+    public List<Forcast> createForcast(){
+
+        List<Forcast> forcastList = new ArrayList<>();
+
         Map<String, Map<String, List<Map<String, String>>>> words = new HashMap<>();
         Map<String, Map<String, List<Map<String, Integer>>>> nums = new HashMap<>();
         Map<String, Map<String, List<Map<String, Map<String, Double>>>>> celciusDouble = new HashMap<>();
@@ -27,26 +29,29 @@ public class ForcastController {
         nums = (Map<String, Map<String, List<Map<String, Integer>>>>) service.forcast();
         celciusDouble = (Map<String, Map<String, List<Map<String, Map<String, Double>>>>>) service.forcast();
         intExtraMap = (Map<String, Map<String, List<Map<String, Map<String, Integer>>>>>) service.forcast();
-
-        forcastObject.setFcNumber(nums.get("properties").get("periods").get(0).get("number"));
-        forcastObject.setName(words.get("properties").get("periods").get(0).get("name"));
-        forcastObject.setTemperature(nums.get("properties").get("periods").get(0).get("temperature"));
-        forcastObject.setTemperatureUnit(words.get("properties").get("periods").get(0).get("temperatureUnit"));
-        forcastObject.setProbabilityOfPrecipitation(intExtraMap.get("properties").get("periods").get(0).get("probabilityOfPrecipitation").get("value"));
-        double DewPointC = (celciusDouble.get("properties").get("periods").get(0).get("dewpoint").get("value"));
-        int DewPointF = (int) ((DewPointC * 1.8) + 32); //Maybe find a better way to round this
-        forcastObject.setDewPoint(DewPointF);
-        forcastObject.setReletiveHumidity(intExtraMap.get("properties").get("periods").get(0).get("relativeHumidity").get("value"));
-        forcastObject.setWindSpeed(words.get("properties").get("periods").get(0).get("windSpeed"));
-        forcastObject.setWindDirection(words.get("properties").get("periods").get(0).get("windDirection"));
-        forcastObject.setShortForcast(words.get("properties").get("periods").get(0).get("shortForecast"));
-        forcastObject.setLongForcast(words.get("properties").get("periods").get(0).get("longForecast"));
-        return forcastObject;
+        for (int i = 0; i < 14; i++) {
+            Forcast forcastObject = new Forcast();
+            forcastObject.setFcNumber(nums.get("properties").get("periods").get(i).get("number"));
+            forcastObject.setName(words.get("properties").get("periods").get(i).get("name"));
+            forcastObject.setTemperature(nums.get("properties").get("periods").get(i).get("temperature"));
+            forcastObject.setTemperatureUnit(words.get("properties").get("periods").get(i).get("temperatureUnit"));
+            forcastObject.setProbabilityOfPrecipitation(intExtraMap.get("properties").get("periods").get(i).get("probabilityOfPrecipitation").get("value"));
+            double DewPointC = (celciusDouble.get("properties").get("periods").get(i).get("dewpoint").get("value"));
+            int DewPointF = (int) ((DewPointC * 1.8) + 32); //Maybe find a better way to round this
+            forcastObject.setDewPoint(DewPointF);
+            forcastObject.setReletiveHumidity(intExtraMap.get("properties").get("periods").get(i).get("relativeHumidity").get("value"));
+            forcastObject.setWindSpeed(words.get("properties").get("periods").get(i).get("windSpeed"));
+            forcastObject.setWindDirection(words.get("properties").get("periods").get(i).get("windDirection"));
+            forcastObject.setShortForcast(words.get("properties").get("periods").get(i).get("shortForecast"));
+            forcastObject.setLongForcast(words.get("properties").get("periods").get(i).get("detailedForecast"));
+            forcastList.add(forcastObject);
+        }
+        return forcastList;
     }
 
     @GetMapping("/poop")
-    public Forcast poopTest(){
-        Forcast ccc = createForcast();
+    public List<Forcast> poopTest(){
+        List<Forcast> ccc = createForcast();
         return ccc;
     }
     @GetMapping("/forcast")
