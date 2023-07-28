@@ -21,17 +21,33 @@ public class ForcastController {
         Forcast forcastObject = new Forcast();
         Map<String, Map<String, List<Map<String, String>>>> words = new HashMap<>();
         Map<String, Map<String, List<Map<String, Integer>>>> nums = new HashMap<>();
+        Map<String, Map<String, List<Map<String, Map<String, Double>>>>> celciusDouble = new HashMap<>();
+        Map<String, Map<String, List<Map<String, Map<String, Integer>>>>> intExtraMap = new HashMap<>();
         words = (Map<String, Map<String, List<Map<String, String>>>>) service.forcast();
         nums = (Map<String, Map<String, List<Map<String, Integer>>>>) service.forcast();
+        celciusDouble = (Map<String, Map<String, List<Map<String, Map<String, Double>>>>>) service.forcast();
+        intExtraMap = (Map<String, Map<String, List<Map<String, Map<String, Integer>>>>>) service.forcast();
+
+        forcastObject.setFcNumber(nums.get("properties").get("periods").get(0).get("number"));
         forcastObject.setName(words.get("properties").get("periods").get(0).get("name"));
         forcastObject.setTemperature(nums.get("properties").get("periods").get(0).get("temperature"));
+        forcastObject.setTemperatureUnit(words.get("properties").get("periods").get(0).get("temperatureUnit"));
+        forcastObject.setProbabilityOfPrecipitation(intExtraMap.get("properties").get("periods").get(0).get("probabilityOfPrecipitation").get("value"));
+        double DewPointC = (celciusDouble.get("properties").get("periods").get(0).get("dewpoint").get("value"));
+        int DewPointF = (int) ((DewPointC * 1.8) + 32); //Maybe find a better way to round this
+        forcastObject.setDewPoint(DewPointF);
+        forcastObject.setReletiveHumidity(intExtraMap.get("properties").get("periods").get(0).get("relativeHumidity").get("value"));
+        forcastObject.setWindSpeed(words.get("properties").get("periods").get(0).get("windSpeed"));
+        forcastObject.setWindDirection(words.get("properties").get("periods").get(0).get("windDirection"));
+        forcastObject.setShortForcast(words.get("properties").get("periods").get(0).get("shortForecast"));
+        forcastObject.setLongForcast(words.get("properties").get("periods").get(0).get("longForecast"));
         return forcastObject;
     }
 
     @GetMapping("/poop")
-    public Integer poopTest(){
+    public Forcast poopTest(){
         Forcast ccc = createForcast();
-        return ccc.getTemperature();
+        return ccc;
     }
     @GetMapping("/forcast")
     public String[] getForcast(){
