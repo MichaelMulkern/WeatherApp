@@ -17,6 +17,22 @@ public class ForcastController {
     @Autowired
     NoaaService service;
 
+    public Forcast createForcast(){
+        Forcast forcastObject = new Forcast();
+        Map<String, Map<String, List<Map<String, String>>>> words = new HashMap<>();
+        Map<String, Map<String, List<Map<String, Integer>>>> nums = new HashMap<>();
+        words = (Map<String, Map<String, List<Map<String, String>>>>) service.forcast();
+        nums = (Map<String, Map<String, List<Map<String, Integer>>>>) service.forcast();
+        forcastObject.setName(words.get("properties").get("periods").get(0).get("name"));
+        forcastObject.setTemperature(nums.get("properties").get("periods").get(0).get("temperature"));
+        return forcastObject;
+    }
+
+    @GetMapping("/poop")
+    public Integer poopTest(){
+        Forcast ccc = createForcast();
+        return ccc.getTemperature();
+    }
     @GetMapping("/forcast")
     public String[] getForcast(){
         Forcast formattedWeather = new Forcast();
