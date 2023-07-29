@@ -3,6 +3,7 @@ package com.weather.forcast.controller;
 import com.weather.forcast.model.Forecast;
 import com.weather.forcast.service.NoaaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,13 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins= "http://localhost:8080")
 @RestController
-public class ForcastController {
+public class ForecastController {
 
     @Autowired
     NoaaService service;
 
-    public List<Forecast> createForcast(){
+    public List<Forecast> createForecast(){
 
         List<Forecast> forecastList = new ArrayList<>();
 
@@ -36,7 +38,7 @@ public class ForcastController {
             forecastObject.setTemperature(nums.get("properties").get("periods").get(i).get("temperature"));
             forecastObject.setTemperatureUnit(words.get("properties").get("periods").get(i).get("temperatureUnit"));
             forecastObject.setProbabilityOfPrecipitation(intExtraMap.get("properties").get("periods").get(i).get("probabilityOfPrecipitation").get("value"));
-            double DewPointC = (celciusDouble.get("properties").get("periods").get(i).get("dewpoint").get("value"));
+            double DewPointC = Double.parseDouble(String.valueOf(celciusDouble.get("properties").get("periods").get(i).get("dewpoint").get("value")));
             int DewPointF = (int) ((DewPointC * 1.8) + 32); //Maybe find a better way to round this
             forecastObject.setDewPoint(DewPointF);
             forecastObject.setReletiveHumidity(intExtraMap.get("properties").get("periods").get(i).get("relativeHumidity").get("value"));
@@ -51,7 +53,7 @@ public class ForcastController {
 
     @GetMapping("/forecast")
     public List<Forecast> getForecast(){
-        List<Forecast> forecast = createForcast();
+        List<Forecast> forecast = createForecast();
         return forecast;
     }
 
