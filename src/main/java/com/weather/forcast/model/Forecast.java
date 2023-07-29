@@ -9,15 +9,15 @@ public class Forecast {
     private Integer fcNumber;
     private Integer temperature;
     private Integer probabilityOfPrecipitation;
-    private Integer reletiveHumidity;
+    private Integer relativeHumidity;
     private Integer dewPoint; //In degrees C, maybe do a conversion or something and instantiate it as int
-    private String shortForcast;
-    private String longForcast;
+    private String shortForecast;
+    private String longForecast;
 
     //Constructors
 
 
-    public Forecast(String name, String temperatureUnit, String windSpeed, String windDirection, Integer fcNumber, Integer temperature, Integer probabilityOfPrecipitation, Integer reletiveHumidity, Integer dewPoint, String shortForcast, String longForcast) {
+    public Forecast(String name, String temperatureUnit, String windSpeed, String windDirection, Integer fcNumber, Integer temperature, Integer probabilityOfPrecipitation, Integer relativeHumidity, Integer dewPoint, String shortForecast, String longForecast) {
         this.name = name;
         this.temperatureUnit = temperatureUnit;
         this.windSpeed = windSpeed;
@@ -25,10 +25,10 @@ public class Forecast {
         this.fcNumber = fcNumber;
         this.temperature = temperature;
         this.probabilityOfPrecipitation = probabilityOfPrecipitation;
-        this.reletiveHumidity = reletiveHumidity;
+        this.relativeHumidity = relativeHumidity;
         this.dewPoint = dewPoint;
-        this.shortForcast = shortForcast;
-        this.longForcast = longForcast;
+        this.shortForecast = shortForecast;
+        this.longForecast = longForecast;
     }
 
     public Forecast() {
@@ -92,12 +92,12 @@ public class Forecast {
         this.probabilityOfPrecipitation = probabilityOfPrecipitation;
     }
 
-    public Integer getReletiveHumidity() {
-        return reletiveHumidity;
+    public Integer getRelativeHumidity() {
+        return relativeHumidity;
     }
 
-    public void setReletiveHumidity(Integer reletiveHumidity) {
-        this.reletiveHumidity = reletiveHumidity;
+    public void setRelativeHumidity(Integer relativeHumidity) {
+        this.relativeHumidity = relativeHumidity;
     }
 
     public Integer getDewPoint() {
@@ -108,19 +108,19 @@ public class Forecast {
         this.dewPoint = dewPoint;
     }
 
-    public String getShortForcast() {
-        return shortForcast;
+    public String getShortForecast() {
+        return shortForecast;
     }
 
-    public void setShortForcast(String shortForcast) {
-        this.shortForcast = shortForcast;
+    public void setShortForecast(String shortForecast) {
+        this.shortForecast = shortForecast;
     }
 
-    public String getLongForcast() {
-        return longForcast;
+    public String getLongForecast() {
+        return longForecast;
     }
 
-    public void setLongForcast(String longForcast) {
-        this.longForcast = longForcast;
+    public void setLongForecast(String longForecast) {
+        this.longForecast = longForecast;
     }
 }

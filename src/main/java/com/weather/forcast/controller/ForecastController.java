@@ -41,11 +41,11 @@ public class ForecastController {
             double DewPointC = Double.parseDouble(String.valueOf(celciusDouble.get("properties").get("periods").get(i).get("dewpoint").get("value")));
             int DewPointF = (int) ((DewPointC * 1.8) + 32); //Maybe find a better way to round this
             forecastObject.setDewPoint(DewPointF);
-            forecastObject.setReletiveHumidity(intExtraMap.get("properties").get("periods").get(i).get("relativeHumidity").get("value"));
+            forecastObject.setRelativeHumidity(intExtraMap.get("properties").get("periods").get(i).get("relativeHumidity").get("value"));
             forecastObject.setWindSpeed(words.get("properties").get("periods").get(i).get("windSpeed"));
             forecastObject.setWindDirection(words.get("properties").get("periods").get(i).get("windDirection"));
-            forecastObject.setShortForcast(words.get("properties").get("periods").get(i).get("shortForecast"));
-            forecastObject.setLongForcast(words.get("properties").get("periods").get(i).get("detailedForecast"));
+            forecastObject.setShortForecast(words.get("properties").get("periods").get(i).get("shortForecast"));
+            forecastObject.setLongForecast(words.get("properties").get("periods").get(i).get("detailedForecast"));
             forecastList.add(forecastObject);
         }
         return forecastList;
