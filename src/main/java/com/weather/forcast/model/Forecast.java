@@ -1,6 +1,6 @@
 package com.weather.forcast.model;
 
-public class Forcast {
+public class Forecast {
 
     private String name;
     private String temperatureUnit;
@@ -17,7 +17,7 @@ public class Forcast {
     //Constructors
 
 
-    public Forcast(String name, String temperatureUnit, String windSpeed, String windDirection, Integer fcNumber, Integer temperature, Integer probabilityOfPrecipitation, Integer reletiveHumidity, Integer dewPoint, String shortForcast, String longForcast) {
+    public Forecast(String name, String temperatureUnit, String windSpeed, String windDirection, Integer fcNumber, Integer temperature, Integer probabilityOfPrecipitation, Integer reletiveHumidity, Integer dewPoint, String shortForcast, String longForcast) {
         this.name = name;
         this.temperatureUnit = temperatureUnit;
         this.windSpeed = windSpeed;
@@ -31,7 +31,7 @@ public class Forcast {
         this.longForcast = longForcast;
     }
 
-    public Forcast() {
+    public Forecast() {
     }
 
     //------G&S-----------------

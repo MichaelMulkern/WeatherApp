@@ -1,6 +1,5 @@
 package com.weather.forcast.service;
 
-import com.weather.forcast.model.Forcast;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
