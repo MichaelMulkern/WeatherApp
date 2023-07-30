@@ -46,6 +46,7 @@ public class ForecastController {
             forecastObject.setWindDirection(words.get("properties").get("periods").get(i).get("windDirection"));
             forecastObject.setShortForecast(words.get("properties").get("periods").get(i).get("shortForecast"));
             forecastObject.setLongForecast(words.get("properties").get("periods").get(i).get("detailedForecast"));
+            forecastObject.setImageKey(imageKeyFinder(forecastObject));
             forecastList.add(forecastObject);
         }
         return forecastList;
@@ -55,6 +56,25 @@ public class ForecastController {
     public List<Forecast> getForecast(){
         List<Forecast> forecast = createForecast();
         return forecast;
+    }
+
+    public String imageKeyFinder(Forecast forecast){
+        String imageKey = "";
+        String shortForecast = forecast.getShortForecast().toLowerCase();
+        String longForecast = forecast.getLongForecast().toLowerCase();
+        int precipitation = forecast.getProbabilityOfPrecipitation();
+        if(precipitation > 50 && (longForecast.matches("(.*)thunder(.*)") || longForecast.matches("(.*)lightning(.*)"))){
+            imageKey = "lightning";
+        } else if(precipitation > 50 && (longForecast.matches("(.*)shower(.*)") || longForecast.matches("(.*)rain(.*)"))){
+            imageKey = "rain";
+        } else if (longForecast.matches("(.*)sun(.*)") || longForecast.matches("(.*)clear(.*)")) {
+            imageKey = "sunny";
+        } else if (longForecast.matches("(.*)cloudy(.*)") || longForecast.matches("(.*)clouds(.*)")) {
+            imageKey = "cloudy";
+        } else{
+          imageKey = "default";
+        }
+        return imageKey;
     }
 
 }

@@ -13,11 +13,12 @@ public class Forecast {
     private Integer dewPoint; //In degrees C, maybe do a conversion or something and instantiate it as int
     private String shortForecast;
     private String longForecast;
+    private String imageKey;
 
     //Constructors
 
 
-    public Forecast(String name, String temperatureUnit, String windSpeed, String windDirection, Integer fcNumber, Integer temperature, Integer probabilityOfPrecipitation, Integer relativeHumidity, Integer dewPoint, String shortForecast, String longForecast) {
+    public Forecast(String name, String temperatureUnit, String windSpeed, String windDirection, Integer fcNumber, Integer temperature, Integer probabilityOfPrecipitation, Integer relativeHumidity, Integer dewPoint, String shortForecast, String longForecast, String imageKey) {
         this.name = name;
         this.temperatureUnit = temperatureUnit;
         this.windSpeed = windSpeed;
@@ -29,6 +30,7 @@ public class Forecast {
         this.dewPoint = dewPoint;
         this.shortForecast = shortForecast;
         this.longForecast = longForecast;
+        this.imageKey = imageKey;
     }
 
     public Forecast() {
@@ -122,5 +124,13 @@ public class Forecast {
 
     public void setLongForecast(String longForecast) {
         this.longForecast = longForecast;
+    }
+
+    public String getImageKey() {
+        return imageKey;
+    }
+
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
     }
 }
