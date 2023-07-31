@@ -4,9 +4,8 @@ import com.weather.forcast.model.Forecast;
 import com.weather.forcast.model.Location;
 import com.weather.forcast.service.NoaaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +22,8 @@ public class ForecastController {
     private String gridX;
     private String gridY;
 
-    private String lat = "40.360278";
-    private String lon = "-81.057778";
+    //private String lat = "40.360278";
+    //private String lon = "-81.057778";
 
     public List<Forecast> createForecast(String gridX, String gridY){
 
@@ -77,13 +76,15 @@ public class ForecastController {
     }
 
     @GetMapping("/forecast")
+    @ResponseStatus(HttpStatus.OK)
     public List<Forecast> getForecast(){
         List<Forecast> forecast = createForecast(gridX, gridY);
         return forecast;
     }
 
-    @GetMapping("/location")
-    public Location getLocation() {
+    @GetMapping("/location/{lat}/{lon}")
+    @ResponseStatus(HttpStatus.OK)
+    public Location getLocation(@PathVariable("lat") String lat, @PathVariable("lon") String lon) {
         Location locationData = getLocationData(lat,lon);
         gridX = String.valueOf(locationData.getGridX());
         gridY = String.valueOf(locationData.getGridY());
