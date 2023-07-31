@@ -1,6 +1,7 @@
 package com.weather.forcast.controller;
 
 import com.weather.forcast.model.Forecast;
+import com.weather.forcast.model.Location;
 import com.weather.forcast.service.NoaaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +20,13 @@ public class ForecastController {
     @Autowired
     NoaaService service;
 
-    public List<Forecast> createForecast(){
+    private String gridX;
+    private String gridY;
+
+    private String lat = "40.360278";
+    private String lon = "-81.057778";
+
+    public List<Forecast> createForecast(String gridX, String gridY){
 
         List<Forecast> forecastList = new ArrayList<>();
 
@@ -27,10 +34,12 @@ public class ForecastController {
         Map<String, Map<String, List<Map<String, Integer>>>> nums = new HashMap<>();
         Map<String, Map<String, List<Map<String, Map<String, Double>>>>> celciusDouble = new HashMap<>();
         Map<String, Map<String, List<Map<String, Map<String, Integer>>>>> intExtraMap = new HashMap<>();
-        words = (Map<String, Map<String, List<Map<String, String>>>>) service.forcast();
-        nums = (Map<String, Map<String, List<Map<String, Integer>>>>) service.forcast();
-        celciusDouble = (Map<String, Map<String, List<Map<String, Map<String, Double>>>>>) service.forcast();
-        intExtraMap = (Map<String, Map<String, List<Map<String, Map<String, Integer>>>>>) service.forcast();
+
+        words = (Map<String, Map<String, List<Map<String, String>>>>) service.forcast(gridX, gridY);
+        nums = (Map<String, Map<String, List<Map<String, Integer>>>>) service.forcast(gridX, gridY);
+        celciusDouble = (Map<String, Map<String, List<Map<String, Map<String, Double>>>>>) service.forcast(gridX, gridY);
+        intExtraMap = (Map<String, Map<String, List<Map<String, Map<String, Integer>>>>>) service.forcast(gridX, gridY);
+
         for (int i = 0; i < 14; i++) {
             Forecast forecastObject = new Forecast();
             forecastObject.setFcNumber(nums.get("properties").get("periods").get(i).get("number"));
@@ -52,17 +61,45 @@ public class ForecastController {
         return forecastList;
     }
 
+    public Location getLocationData(String lat, String lon) {
+        Location location = new Location();
+        Map<String, Map<String,Integer>> nums = new HashMap<>();
+        Map<String, Map<String,Map<String, Map<String, String>>>> words = new HashMap<>();
+
+        nums = (Map<String, Map<String,Integer>>) service.locationData(lat, lon);
+        words = (Map<String, Map<String,Map<String, Map<String, String>>>>) service.locationData(lat, lon);
+
+        location.setGridX(nums.get("properties").get("gridX"));
+        location.setGridY(nums.get("properties").get("gridY"));
+        location.setCity(words.get("properties").get("relativeLocation").get("properties").get("city"));
+        location.setState(words.get("properties").get("relativeLocation").get("properties").get("state"));
+        return location;
+    }
+
     @GetMapping("/forecast")
     public List<Forecast> getForecast(){
-        List<Forecast> forecast = createForecast();
+        List<Forecast> forecast = createForecast(gridX, gridY);
         return forecast;
+    }
+
+    @GetMapping("/location")
+    public Location getLocation() {
+        Location locationData = getLocationData(lat,lon);
+        gridX = String.valueOf(locationData.getGridX());
+        gridY = String.valueOf(locationData.getGridY());
+        return locationData;
     }
 
     public String imageKeyFinder(Forecast forecast){
         String imageKey = "";
-        String shortForecast = forecast.getShortForecast().toLowerCase();
+        int precipitation = 0;
+        //String shortForecast = forecast.getShortForecast().toLowerCase();
         String longForecast = forecast.getLongForecast().toLowerCase();
-        int precipitation = forecast.getProbabilityOfPrecipitation();
+        if(forecast.getProbabilityOfPrecipitation() != null) {
+            precipitation = forecast.getProbabilityOfPrecipitation();
+        }else {
+            precipitation = 0;
+        }
         if(precipitation > 50 && (longForecast.matches("(.*)thunder(.*)") || longForecast.matches("(.*)lightning(.*)"))){
             imageKey = "lightning";
         } else if(precipitation > 50 && (longForecast.matches("(.*)shower(.*)") || longForecast.matches("(.*)rain(.*)"))){

@@ -14,18 +14,22 @@ import java.util.Map;
 @Service
 public class NoaaService {
 
+    //private String gridCoords = "gridpoints/TOP/71,90/forecast";
+    //private String latLon= "points/42.360278,-71.057778";
+
     @Value("${API_KEY}")
     private String apiKey;
 
-   // @Value("${API_URL}")
-   // private String url;
+    //@Value("${API_URL}")
+    //private String url;
 
-    private String url = "https://api.weather.gov/gridpoints/TOP/71,90/forecast";
-    private String getGrid = "https://api.weather.gov/points/42.360278,-71.057778";
+
+    //private String getGrid = "https://api.weather.gov/points/42.360278,-71.057778";
 
     private RestTemplate template = new RestTemplate();
 
-    public Map forcast(){
+    public Map forcast(String gridX, String gridY){
+        String url = "https://api.weather.gov/gridpoints/TOP/" + gridX + "," + gridY + "/forecast";
         HttpHeaders headers = new HttpHeaders();
 
         Map weatherForcast = new HashMap<>();
@@ -43,6 +47,28 @@ public class NoaaService {
         }
         return weatherForcast;
 
+    }
+
+    public Map locationData(String lat, String lon){
+        String url = "https://api.weather.gov/points/" + lat + "," + lon;
+        HttpHeaders headers = new HttpHeaders();
+
+        Map locationInfo = new HashMap<>();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(apiKey);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity <Map> response = template.exchange(url, HttpMethod.GET, entity, Map.class);
+            locationInfo = response.getBody();
+        } catch (RestClientResponseException e) {
+            System.out.println("bad connection" + e.getMessage());
+        } catch (ResourceAccessException e) {
+            System.out.println("RAE EXCEPTION");
+        }
+
+        return locationInfo;
     }
 
 }
