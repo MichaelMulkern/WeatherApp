@@ -1,6 +1,7 @@
 package com.weather.forcast.controller;
 
 import com.weather.forcast.model.Forecast;
+import com.weather.forcast.model.Hourly;
 import com.weather.forcast.model.Location;
 import com.weather.forcast.service.NoaaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,12 @@ public class ForecastController {
 
     private String gridX;
     private String gridY;
+    private String officeId;
 
     //private String lat = "40.360278";
     //private String lon = "-81.057778";
 
-    public List<Forecast> createForecast(String gridX, String gridY){
+    public List<Forecast> createForecast(String gridX, String gridY, String officeId){
 
         List<Forecast> forecastList = new ArrayList<>();
 
@@ -34,10 +36,10 @@ public class ForecastController {
         Map<String, Map<String, List<Map<String, Map<String, Double>>>>> celciusDouble = new HashMap<>();
         Map<String, Map<String, List<Map<String, Map<String, Integer>>>>> intExtraMap = new HashMap<>();
 
-        words = (Map<String, Map<String, List<Map<String, String>>>>) service.forcast(gridX, gridY);
-        nums = (Map<String, Map<String, List<Map<String, Integer>>>>) service.forcast(gridX, gridY);
-        celciusDouble = (Map<String, Map<String, List<Map<String, Map<String, Double>>>>>) service.forcast(gridX, gridY);
-        intExtraMap = (Map<String, Map<String, List<Map<String, Map<String, Integer>>>>>) service.forcast(gridX, gridY);
+        words = (Map<String, Map<String, List<Map<String, String>>>>) service.forcast(gridX, gridY, officeId);
+        nums = (Map<String, Map<String, List<Map<String, Integer>>>>) service.forcast(gridX, gridY, officeId);
+        celciusDouble = (Map<String, Map<String, List<Map<String, Map<String, Double>>>>>) service.forcast(gridX, gridY, officeId);
+        intExtraMap = (Map<String, Map<String, List<Map<String, Map<String, Integer>>>>>) service.forcast(gridX, gridY, officeId);
 
         for (int i = 0; i < 14; i++) {
             Forecast forecastObject = new Forecast();
@@ -63,22 +65,49 @@ public class ForecastController {
     public Location getLocationData(String lat, String lon) {
         Location location = new Location();
         Map<String, Map<String,Integer>> nums = new HashMap<>();
+        Map<String, Map<String,String>> idString = new HashMap<>();
         Map<String, Map<String,Map<String, Map<String, String>>>> words = new HashMap<>();
 
         nums = (Map<String, Map<String,Integer>>) service.locationData(lat, lon);
+        idString = (Map<String, Map<String,String>>) service.locationData(lat, lon);
         words = (Map<String, Map<String,Map<String, Map<String, String>>>>) service.locationData(lat, lon);
 
         location.setGridX(nums.get("properties").get("gridX"));
         location.setGridY(nums.get("properties").get("gridY"));
+        location.setStationId(idString.get("properties").get("gridId"));
         location.setCity(words.get("properties").get("relativeLocation").get("properties").get("city"));
         location.setState(words.get("properties").get("relativeLocation").get("properties").get("state"));
         return location;
     }
 
+    public List<Hourly> createHourly(String gridX, String gridY, String officeId){
+        List<Hourly> hourlyList = new ArrayList<>();
+
+        Map<String, Map<String, List<Map<String, String>>>> words = new HashMap<>();
+        Map<String, Map<String, List<Map<String, Integer>>>> nums = new HashMap<>();
+        Map<String, Map<String, List<Map<String, Boolean>>>> bools = new HashMap<>();
+
+        words = (Map<String, Map<String, List<Map<String, String>>>>) service.hourly(gridX, gridY, officeId);
+        nums = (Map<String, Map<String, List<Map<String, Integer>>>>) service.hourly(gridX, gridY, officeId);
+        bools = (Map<String, Map<String, List<Map<String, Boolean>>>>) service.hourly(gridX, gridY, officeId);
+
+        for (int i = 0; i < 24; i++) {
+            Hourly hourlyObject = new Hourly();
+            hourlyObject.setDaytime(bools.get("properties").get("periods").get(i).get("isDaytime"));
+            hourlyObject.setShortForecast(words.get("properties").get("periods").get(i).get("shortForecast"));
+            hourlyObject.setStartTime(words.get("properties").get("periods").get(i).get("startTime"));
+            hourlyObject.setTemperature(nums.get("properties").get("periods").get(i).get("temperature"));
+
+            hourlyList.add(hourlyObject);
+        }
+
+        return hourlyList;
+    }
+
     @GetMapping("/forecast")
     @ResponseStatus(HttpStatus.OK)
     public List<Forecast> getForecast(){
-        List<Forecast> forecast = createForecast(gridX, gridY);
+        List<Forecast> forecast = createForecast(gridX, gridY, officeId);
         return forecast;
     }
 
@@ -88,7 +117,15 @@ public class ForecastController {
         Location locationData = getLocationData(lat,lon);
         gridX = String.valueOf(locationData.getGridX());
         gridY = String.valueOf(locationData.getGridY());
+        officeId = locationData.getStationId();
         return locationData;
+    }
+
+    @GetMapping("/hourly")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Hourly> getHourly(){
+      List<Hourly> hourly = createHourly(gridX, gridY, officeId);
+      return hourly;
     }
 
     public String imageKeyFinder(Forecast forecast){

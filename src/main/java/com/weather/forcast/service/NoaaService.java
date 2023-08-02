@@ -28,8 +28,8 @@ public class NoaaService {
 
     private RestTemplate template = new RestTemplate();
 
-    public Map forcast(String gridX, String gridY){
-        String url = "https://api.weather.gov/gridpoints/TOP/" + gridX + "," + gridY + "/forecast";
+    public Map forcast(String gridX, String gridY, String officeId){
+        String url = "https://api.weather.gov/gridpoints/" + officeId + "/" + gridX + "," + gridY + "/forecast";
         HttpHeaders headers = new HttpHeaders();
 
         Map weatherForcast = new HashMap<>();
@@ -71,4 +71,23 @@ public class NoaaService {
         return locationInfo;
     }
 
+    public Map hourly(String gridX, String gridY, String officeId){
+        String url = "https://api.weather.gov/gridpoints/" + officeId + "/" + gridX + "," + gridY + "/forecast/hourly";
+        HttpHeaders headers = new HttpHeaders();
+
+        Map hourlyForecast = new HashMap<>();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(apiKey);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        try {
+            ResponseEntity<Map> response = template.exchange(url, HttpMethod.GET, entity, Map.class);
+            hourlyForecast = response.getBody();
+        } catch (RestClientResponseException e) {
+            System.out.println("bad connection" + e.getMessage());
+        } catch (ResourceAccessException e) {
+            System.out.println("RAE EXCEPTION");
+        }
+        return hourlyForecast;
+    }
 }

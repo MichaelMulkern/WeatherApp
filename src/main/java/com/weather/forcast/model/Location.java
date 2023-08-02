@@ -6,12 +6,14 @@ public class Location {
     private Integer gridY;
     private String city;
     private String state;
+    private String stationId;
 
-    public Location(Integer gridX, Integer gridY, String city, String state) {
+    public Location(Integer gridX, Integer gridY, String city, String state, String stationId) {
         this.gridX = gridX;
         this.gridY = gridY;
         this.city = city;
         this.state = state;
+        this.stationId = stationId;
     }
 
     public Location() {
@@ -47,5 +49,13 @@ public class Location {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
     }
 }
