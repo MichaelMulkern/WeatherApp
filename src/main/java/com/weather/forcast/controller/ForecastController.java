@@ -92,12 +92,14 @@ public class ForecastController {
         bools = (Map<String, Map<String, List<Map<String, Boolean>>>>) service.hourly(gridX, gridY, officeId);
 
         for (int i = 0; i < 24; i++) {
+            //String timeString = "";
             Hourly hourlyObject = new Hourly();
             hourlyObject.setDaytime(bools.get("properties").get("periods").get(i).get("isDaytime"));
             hourlyObject.setShortForecast(words.get("properties").get("periods").get(i).get("shortForecast"));
-            hourlyObject.setStartTime(words.get("properties").get("periods").get(i).get("startTime"));
+            String timeString = words.get("properties").get("periods").get(i).get("startTime");
+            hourlyObject.setStartTime(timeString.substring(11,16));
             hourlyObject.setTemperature(nums.get("properties").get("periods").get(i).get("temperature"));
-
+            hourlyObject.setImageKey(hourlyImageKey(hourlyObject));
             hourlyList.add(hourlyObject);
         }
 
@@ -148,6 +150,23 @@ public class ForecastController {
             imageKey = "cloudy";
         } else{
           imageKey = "default";
+        }
+        return imageKey;
+    }
+
+    public String hourlyImageKey(Hourly hourly){
+        String imageKey = "";
+        String shortForecast = hourly.getShortForecast().toLowerCase();
+        if(shortForecast.contains("thunder") || shortForecast.contains("loghtning")){
+            imageKey = "lightning";
+        }else if (shortForecast.contains("shower") || shortForecast.contains("rain")){
+            imageKey = "rain";
+        }else if (shortForecast.contains("sun") || shortForecast.contains("clear")){
+            imageKey = "sunny";
+        }else if (shortForecast.contains("cloudy") || shortForecast.contains("clouds")){
+            imageKey = "cloudy";
+        }else{
+            imageKey = "default";
         }
         return imageKey;
     }

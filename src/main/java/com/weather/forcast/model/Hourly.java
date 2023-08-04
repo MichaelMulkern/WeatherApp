@@ -6,13 +6,15 @@ public class Hourly{
     private String shortForecast;
     private Boolean isDaytime;
     private String startTime;
+    private String imageKey;
 
     //-------Constructors------------
-    public Hourly(Integer temperature, String shortForecast, Boolean isDaytime, String startTime) {
+    public Hourly(Integer temperature, String shortForecast, Boolean isDaytime, String startTime, String imageKey) {
         this.temperature = temperature;
         this.shortForecast = shortForecast;
         this.isDaytime = isDaytime;
         this.startTime = startTime;
+        this.imageKey = imageKey;
     }
 
     public Hourly() {
@@ -50,5 +52,12 @@ public class Hourly{
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    public String getImageKey() {
+        return imageKey;
+    }
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
     }
 }
