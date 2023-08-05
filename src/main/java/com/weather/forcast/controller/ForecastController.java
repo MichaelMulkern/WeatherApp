@@ -131,7 +131,7 @@ public class ForecastController {
     }
 
     public String imageKeyFinder(Forecast forecast){
-        String imageKey = "";
+        String imageKey;
         int precipitation = 0;
         //String shortForecast = forecast.getShortForecast().toLowerCase();
         String longForecast = forecast.getLongForecast().toLowerCase();
@@ -146,6 +146,8 @@ public class ForecastController {
             imageKey = "rain";
         } else if (longForecast.matches("(.*)sun(.*)") || longForecast.matches("(.*)clear(.*)")) {
             imageKey = "sunny";
+        } else if (longForecast.contains("partly")){
+            imageKey = "partly";
         } else if (longForecast.matches("(.*)cloudy(.*)") || longForecast.matches("(.*)clouds(.*)")) {
             imageKey = "cloudy";
         } else{
@@ -155,14 +157,20 @@ public class ForecastController {
     }
 
     public String hourlyImageKey(Hourly hourly){
-        String imageKey = "";
+        String imageKey;
         String shortForecast = hourly.getShortForecast().toLowerCase();
         if(shortForecast.contains("thunder") || shortForecast.contains("loghtning")){
             imageKey = "lightning";
         }else if (shortForecast.contains("shower") || shortForecast.contains("rain")){
             imageKey = "rain";
-        }else if (shortForecast.contains("sun") || shortForecast.contains("clear")){
+        }else if(shortForecast.contains("partly") && hourly.getDaytime()){
+            imageKey = "partly";
+        }else if(shortForecast.contains("partly") && !hourly.getDaytime()){
+            imageKey = "partlymoon";
+        }else if ((shortForecast.contains("sun") || shortForecast.contains("clear")) && hourly.getDaytime()){
             imageKey = "sunny";
+        }else if ((shortForecast.contains("sun") || shortForecast.contains("clear")) && !hourly.getDaytime()){
+            imageKey = "moon";
         }else if (shortForecast.contains("cloudy") || shortForecast.contains("clouds")){
             imageKey = "cloudy";
         }else{
